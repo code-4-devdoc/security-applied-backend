@@ -1,6 +1,7 @@
 // ResumeController.java
 package com.devdoc.backend.controller;
 
+import com.devdoc.backend.dto.LanguageDTO;
 import com.devdoc.backend.dto.ResumeDTO;
 import com.devdoc.backend.dto.SkillDTO;
 import com.devdoc.backend.model.Resume;
@@ -22,11 +23,32 @@ public class ResumeController {
         this.resumeService = resumeService;
     }
 
+    @PutMapping("/{resumeId}/languages")
+    public ResponseEntity<LanguageDTO> updateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
+        try {
+            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
+            return ResponseEntity.ok(updatedLanguage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @DeleteMapping("/{resumeId}/languages/{languageId}")
     public ResponseEntity<Void> deleteLanguage(@PathVariable int resumeId, @PathVariable int languageId) {
         try {
             resumeService.deleteLanguage(resumeId, languageId);
             return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/{resumeId}/languages")
+    public ResponseEntity<LanguageDTO> saveOrUpdateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
+        try {
+            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
+            return ResponseEntity.ok(updatedLanguage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

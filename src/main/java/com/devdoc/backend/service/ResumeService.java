@@ -13,8 +13,11 @@ import com.devdoc.backend.repository.ResumeRepository;
 import com.devdoc.backend.repository.SkillRepository;
 import com.devdoc.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,5 +121,50 @@ public class ResumeService {
         Optional<Language> language = languageRepository.findByIdAndResumeId(languageId, resumeId);
         language.ifPresent(languageRepository::delete);
     }
+
+    @Transactional
+    public LanguageDTO saveLanguage(int resumeId, LanguageDTO languageDTO) {
+        Optional<Resume> optionalResume = resumeRepository.findById(resumeId);
+        if (optionalResume.isPresent()) {
+            Resume resume = optionalResume.get();
+            Language language = new Language();
+            language.setLanguage(languageDTO.getLanguage());
+            language.setTestName(languageDTO.getTestName());
+            language.setScore(languageDTO.getScore());
+            language.setDate(languageDTO.getDate());
+            language.setResume(resume);
+            Language savedLanguage = languageRepository.save(language);
+            return new LanguageDTO(savedLanguage.getId(), savedLanguage.getLanguage(), savedLanguage.getTestName(), savedLanguage.getScore(), savedLanguage.getDate());
+        }
+        throw new RuntimeException("Resume not found");
+    }
+
+    @Transactional
+    public LanguageDTO saveOrUpdateLanguage(int resumeId, LanguageDTO languageDTO) {
+        Optional<Resume> optionalResume = resumeRepository.findById(resumeId);
+        if (optionalResume.isPresent()) {
+            Resume resume = optionalResume.get();
+            Language language = languageRepository.findByIdAndResumeId(languageDTO.getId(), resumeId)
+                    .orElse(new Language());
+
+            // Integer 타입의 ID를 사용하여 null 여부를 확인합니다.
+            boolean isNew = (language.getId() == null);
+
+            language.setLanguage(languageDTO.getLanguage());
+            language.setTestName(languageDTO.getTestName());
+            language.setScore(languageDTO.getScore());
+            language.setDate(languageDTO.getDate());
+            language.setResume(resume);
+
+            Language savedLanguage = languageRepository.save(language);
+
+            // 새로운 데이터인 경우 ID를 포함한 DTO를 반환합니다.
+            return new LanguageDTO(savedLanguage.getId(), savedLanguage.getLanguage(), savedLanguage.getTestName(), savedLanguage.getScore(), savedLanguage.getDate());
+        }
+        throw new RuntimeException("Resume not found");
+    }
+
+
+
 
 }
