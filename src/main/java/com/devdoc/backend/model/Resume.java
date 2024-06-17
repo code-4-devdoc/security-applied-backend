@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,25 +17,28 @@ import java.util.List;
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private String title;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user; // 이력서를 소유한 유저
 
-
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Language> languages; // 이력서에 포함된 언어 목록
 
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Award> awards;
+    private List<Award> awards; // 이력서에 포함된 수상 목록
 
-    public Resume(String title, UserEntity user) {
-        this.title = title;
-        this.user = user;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
+
+    // Getters and setters...
 }
 
 

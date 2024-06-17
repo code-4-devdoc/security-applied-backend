@@ -68,7 +68,7 @@ public class ResumeService {
                     .map(award -> new AwardDTO(award.getId(), award.getAwardName(), award.getAwardingInstitution(), award.getDate(), award.getDescription()))
                     .collect(Collectors.toList());
 
-            return new ResumeDTO(resume.getId(), resume.getTitle(), languageDTOs, awardDTOs);
+            return new ResumeDTO(resume.getId(), resume.getTitle(), resume.getCreatedAt(), languageDTOs, awardDTOs);
         }
         return null;
     }
@@ -79,22 +79,22 @@ public class ResumeService {
     }
 
     private ResumeDTO convertToDTO(Resume resume) {
-        List<LanguageDTO> languageDTOs = languageRepository.findByResumeId(resume.getId())
+        List<LanguageDTO> languages = languageRepository.findByResumeId(resume.getId())
                 .stream()
                 .map(language -> new LanguageDTO(language.getId(), language.getLanguage(), language.getTestName(), language.getScore(), language.getDate()))
                 .collect(Collectors.toList());
 
-        List<AwardDTO> awardDTOs = awardRepository.findByResumeId(resume.getId())
+        List<AwardDTO> awards = awardRepository.findByResumeId(resume.getId())
                 .stream()
                 .map(award -> new AwardDTO(award.getId(), award.getAwardName(), award.getAwardingInstitution(), award.getDate(), award.getDescription()))
                 .collect(Collectors.toList());
 
-        return new ResumeDTO(resume.getId(), resume.getTitle(), languageDTOs, awardDTOs);
+        return new ResumeDTO(resume.getId(), resume.getTitle(), resume.getCreatedAt(), languages, awards);
     }
 
     public List<ResumeDTO> getAllResumesByUser(String userId) {
         List<Resume> resumes = resumeRepository.findByUserId(userId);
-        return resumes.stream().map(resume -> new ResumeDTO(resume.getId(), resume.getTitle(), null, null)).collect(Collectors.toList());
+        return resumes.stream().map(resume -> new ResumeDTO(resume.getId(), resume.getTitle(), resume.getCreatedAt(), null, null)).collect(Collectors.toList());
     }
 
     @Transactional
@@ -102,7 +102,9 @@ public class ResumeService {
         Optional<UserEntity> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
-            Resume resume = new Resume(title, user);
+            Resume resume = new Resume();
+            resume.setTitle(title);
+            resume.setUser(user);
             resume = resumeRepository.save(resume);
             return resume;
         } else {
@@ -123,12 +125,12 @@ public class ResumeService {
             Resume resume = optionalResume.get();
             resume.setTitle(newTitle);
             resumeRepository.save(resume);
-            return new ResumeDTO(resume.getId(), resume.getTitle(), null, null);
+            return new ResumeDTO(resume.getId(), resume.getTitle(), resume.getCreatedAt(), null, null);
         }
         return null;
     }
 
-    // Language 관련 메서드들
+
     @Transactional
     public LanguageDTO saveOrUpdateLanguage(int resumeId, LanguageDTO languageDTO) {
         Optional<Resume> optionalResume = resumeRepository.findById(resumeId);
@@ -158,7 +160,6 @@ public class ResumeService {
         language.ifPresent(languageRepository::delete);
     }
 
-    // Award 관련 메서드들
     @Transactional
     public AwardDTO saveOrUpdateAward(int resumeId, AwardDTO awardDTO) {
         Optional<Resume> optionalResume = resumeRepository.findById(resumeId);
@@ -187,4 +188,5 @@ public class ResumeService {
         Optional<Award> award = awardRepository.findByIdAndResumeId(awardId, resumeId);
         award.ifPresent(awardRepository::delete);
     }
+
 }
