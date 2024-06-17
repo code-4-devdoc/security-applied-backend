@@ -22,33 +22,22 @@ public class ResumeController {
         this.resumeService = resumeService;
     }
 
-    // User 의 Resume 목록 조회 : Id와 Title만
-    @GetMapping
-    public ResponseEntity<List<ResumeDTO>> getAllResumesByUser(@AuthenticationPrincipal String userId) {
+    @GetMapping("/record")
+    public ResponseEntity<List<ResumeDTO>> getAllResumes() {
+        List<ResumeDTO> resumes = resumeService.getAllResumes();
+        return ResponseEntity.ok(resumes);
+    }
+
+    @PostMapping("/{resumeId}/save")
+    public ResponseEntity<?> saveResume(@PathVariable int resumeId, @RequestBody ResumeDTO resumeDTO) {
         try {
-            List<ResumeDTO> resumes = resumeService.getAllResumesByUser(userId);
-            return new ResponseEntity<>(resumes, HttpStatus.OK);
+            resumeService.saveResume(resumeId, resumeDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    // ResumeId 조회 : 모든 테이블
-    @GetMapping("/{resumeId}/test")
-    public ResponseEntity<ResumeDTO> getResumeByResumeIdTest(@PathVariable int resumeId) {
-        try {
-            ResumeDTO resumeDTO = resumeService.getResumeByResumeIdTest(resumeId);
-            if (resumeDTO != null) {
-                return new ResponseEntity<>(resumeDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // ResumeId 조회 : Status = T 인 모든 테이블
     @GetMapping("/{resumeId}")
     public ResponseEntity<ResumeDTO> getResumeByResumeId(@PathVariable int resumeId) {
         try {
@@ -63,7 +52,16 @@ public class ResumeController {
         }
     }
 
-    // ResumeId 생성 : SkillId x3 생성
+    @GetMapping
+    public ResponseEntity<List<ResumeDTO>> getAllResumesByUser(@AuthenticationPrincipal String userId) {
+        try {
+            List<ResumeDTO> resumes = resumeService.getAllResumesByUser(userId);
+            return new ResponseEntity<>(resumes, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Resume> createResume(@RequestBody String title, @AuthenticationPrincipal String userId) {
         try {
@@ -74,7 +72,6 @@ public class ResumeController {
         }
     }
 
-    // ResumeId 삭제
     @DeleteMapping("/{resumeId}")
     public ResponseEntity<Void> deleteResumeByResumeId(@PathVariable int resumeId) {
         try {
@@ -85,7 +82,6 @@ public class ResumeController {
         }
     }
 
-    // ResumeId 업데이트 : Title만
     @PutMapping("/{resumeId}/title")
     public ResponseEntity<ResumeDTO> saveResumeTitleByResumeId(
             @PathVariable int resumeId,
@@ -101,25 +97,4 @@ public class ResumeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    // SkillId 업데이트
-    @PutMapping("/{skillId}/skills")
-    public ResponseEntity<SkillDTO> saveSkillBySkillId(
-            @PathVariable int skillId,
-            @RequestBody String newContent) {
-        try {
-            SkillDTO updatedSkill = resumeService.saveSkillBySkillId(skillId, newContent);
-            if (updatedSkill != null) {
-                return ResponseEntity.ok(updatedSkill);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-
-    }
-
-
 }

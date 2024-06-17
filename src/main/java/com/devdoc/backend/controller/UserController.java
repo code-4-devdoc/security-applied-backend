@@ -50,6 +50,7 @@ public class UserController {
 					.email(registeredUser.getEmail()) // 응답 DTO에 이메일 설정
 					.id(registeredUser.getId()) // 응답 DTO에 ID 설정
 					.username(registeredUser.getUsername()) // 응답 DTO에 사용자 이름 설정
+					.createdAt(registeredUser.getCreatedAt()) // CreatedAt 추가
 					.build();
 
 			// 성공 응답 반환
@@ -83,6 +84,7 @@ public class UserController {
 					.email(user.getUsername()) // 응답 DTO에 이메일 설정
 					.id(user.getId()) // 응답 DTO에 ID 설정
 					.token(token) // 응답 DTO에 토큰 설정
+					.createdAt(user.getCreatedAt()) // CreatedAt 추가
 					.build();
 
 			// 성공 응답 반환

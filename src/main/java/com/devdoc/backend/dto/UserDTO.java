@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 // UserDTO: 사용자 DTO
 
 @Data
@@ -17,6 +19,7 @@ public class UserDTO {
 	private String username; // 사용자 이름
 	private String password; // 비밀번호
 	private String email; // 이메일
+	private LocalDateTime createdAt;
 
 
 }

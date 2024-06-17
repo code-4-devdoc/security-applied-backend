@@ -1,6 +1,11 @@
 // SkillDTO.java
 package com.devdoc.backend.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
 public class SkillDTO {
     private int id;
     private int resumeId;

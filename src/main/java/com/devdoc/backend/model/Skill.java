@@ -28,6 +28,13 @@ public class Skill {
         this.content = content;
     }
 
+    public Skill(int id, Resume resume, boolean status, String content) {
+        this.id = id;
+        this.resume = resume;
+        this.status = status;
+        this.content = content;
+    }
+
     public int getId() {
         return id;
     }
@@ -60,3 +67,4 @@ public class Skill {
         this.content = content;
     }
 }
+

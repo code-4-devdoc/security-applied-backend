@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 // UserEntity: 사용자 정보를 데이터베이스에 저장하고 관리하기 위한 Entity
@@ -20,8 +21,8 @@ import java.util.List;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class UserEntity {
 	@Id
-	@GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid", strategy = "uuid")
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id; // 사용자 고유 ID
 
 	@Column(nullable = false)
@@ -33,8 +34,15 @@ public class UserEntity {
 	@Column(nullable = false)
 	private String password; // 사용자 비밀번호
 
+	private LocalDateTime createdAt;
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Resume> resumes; // 사용자와 연결된 이력서 목록
+
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now(); // 엔티티가 생성될 때 자동으로 현재 시간이 설정됨
+	}
 }
 
 
