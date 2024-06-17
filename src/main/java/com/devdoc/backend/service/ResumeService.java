@@ -112,4 +112,11 @@ public class ResumeService {
         }
         return null;
     }
+
+    @Transactional
+    public void deleteLanguage(int resumeId, int languageId) {
+        Optional<Language> language = languageRepository.findByIdAndResumeId(languageId, resumeId);
+        language.ifPresent(languageRepository::delete);
+    }
+
 }

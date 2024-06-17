@@ -22,6 +22,16 @@ public class ResumeController {
         this.resumeService = resumeService;
     }
 
+    @DeleteMapping("/{resumeId}/languages/{languageId}")
+    public ResponseEntity<Void> deleteLanguage(@PathVariable int resumeId, @PathVariable int languageId) {
+        try {
+            resumeService.deleteLanguage(resumeId, languageId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/record")
     public ResponseEntity<List<ResumeDTO>> getAllResumes() {
         List<ResumeDTO> resumes = resumeService.getAllResumes();
