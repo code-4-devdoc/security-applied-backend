@@ -1,6 +1,7 @@
 // ResumeController.java
 package com.devdoc.backend.controller;
 
+import com.devdoc.backend.dto.AwardDTO;
 import com.devdoc.backend.dto.LanguageDTO;
 import com.devdoc.backend.dto.ResumeDTO;
 import com.devdoc.backend.dto.SkillDTO;
@@ -49,6 +50,37 @@ public class ResumeController {
         try {
             LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
             return ResponseEntity.ok(updatedLanguage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Award 관련 엔드포인트
+    @PutMapping("/{resumeId}/awards")
+    public ResponseEntity<AwardDTO> updateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
+        try {
+            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
+            return ResponseEntity.ok(updatedAward);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{resumeId}/awards/{awardId}")
+    public ResponseEntity<Void> deleteAward(@PathVariable int resumeId, @PathVariable int awardId) {
+        try {
+            resumeService.deleteAward(resumeId, awardId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/{resumeId}/awards")
+    public ResponseEntity<AwardDTO> saveOrUpdateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
+        try {
+            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
+            return ResponseEntity.ok(updatedAward);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

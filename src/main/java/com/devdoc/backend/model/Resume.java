@@ -16,7 +16,7 @@ import java.util.List;
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String title;
 
@@ -27,6 +27,9 @@ public class Resume {
 
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Language> languages; // 이력서에 포함된 언어 목록
+
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Award> awards;
 
     public Resume(String title, UserEntity user) {
         this.title = title;

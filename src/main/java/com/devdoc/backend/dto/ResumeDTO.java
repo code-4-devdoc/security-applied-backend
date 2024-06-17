@@ -11,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumeDTO {
-    private int id;
+    private Integer id;
     private String title;
     private List<LanguageDTO> languages;
+    private List<AwardDTO> awards;
 }
