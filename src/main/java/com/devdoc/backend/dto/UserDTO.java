@@ -19,7 +19,7 @@ public class UserDTO {
 	private String username; // 사용자 이름
 	private String password; // 비밀번호
 	private String email; // 이메일
-	private LocalDateTime createdAt;
+	private LocalDateTime createdAt; // 생성일자
 
 
 }

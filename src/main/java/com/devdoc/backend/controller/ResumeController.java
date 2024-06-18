@@ -21,6 +21,91 @@ public class ResumeController {
     @Autowired
     private ResumeService resumeService;
 
+    /* Language 관련 메소드 시작 */
+
+    // language 데이터 저장 또는 수정
+    @PostMapping("/{resumeId}/languages")
+    public ResponseEntity<LanguageDTO> saveOrUpdateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
+        try {
+            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
+            return ResponseEntity.ok(updatedLanguage); // 업데이트된 language 데이터 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 서버 에러 발생 시 500 반환
+        }
+    }
+
+    // language 데이터 삭제
+    @DeleteMapping("/{resumeId}/languages/{languageId}")
+    public ResponseEntity<Void> deleteLanguage(@PathVariable int resumeId, @PathVariable int languageId) {
+        try {
+            resumeService.deleteLanguage(resumeId, languageId);
+            return ResponseEntity.noContent().build(); // language 데이터 삭제 후 no content 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // language 데이터 수정
+    @PutMapping("/{resumeId}/languages")
+    public ResponseEntity<LanguageDTO> updateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
+        try {
+            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
+            return ResponseEntity.ok(updatedLanguage); // 수정된 language 데이터 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Award 데이터 저장 또는 수정
+    @PostMapping("/{resumeId}/awards")
+    public ResponseEntity<AwardDTO> saveOrUpdateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
+        try {
+            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
+            return ResponseEntity.ok(updatedAward); // 수정된 Award 데이터 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /* Language 관련 메소드 끝 */
+    /* Award 관련 메소드 시작 */
+
+    // Award 데이터 삭제
+    @DeleteMapping("/{resumeId}/awards/{awardId}")
+    public ResponseEntity<Void> deleteAward(@PathVariable int resumeId, @PathVariable int awardId) {
+        try {
+            resumeService.deleteAward(resumeId, awardId);
+            return ResponseEntity.noContent().build(); //Award 데이터 삭제 후 no content 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // Award 데이터 수정
+    @PutMapping("/{resumeId}/awards")
+    public ResponseEntity<AwardDTO> updateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
+        try {
+            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
+            return ResponseEntity.ok(updatedAward); // 업데이트된 Award 데이터 반환
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /* Award 관련 메소드 끝 */
+
+
+
+    // 이력서 저장
+    @PostMapping("/{resumeId}/save")
+    public ResponseEntity<?> saveResume(@PathVariable int resumeId, @RequestBody ResumeDTO resumeDTO) {
+        try {
+            resumeService.saveResume(resumeId, resumeDTO);
+            return new ResponseEntity<>(HttpStatus.OK); // 이력서 저장 후 200 반환
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 서버 에러 발생 시 500 반환
+        }
+    }
 
     // 이력서 데이터 불러오기
     @GetMapping("/{resumeId}")
@@ -87,75 +172,4 @@ public class ResumeController {
         }
     }
 
-
-    // 이력서 저장
-    @PostMapping("/{resumeId}/save")
-    public ResponseEntity<?> saveResume(@PathVariable int resumeId, @RequestBody ResumeDTO resumeDTO) {
-        try {
-            resumeService.saveResume(resumeId, resumeDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/{resumeId}/languages")
-    public ResponseEntity<LanguageDTO> saveOrUpdateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
-        try {
-            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
-            return ResponseEntity.ok(updatedLanguage);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{resumeId}/languages/{languageId}")
-    public ResponseEntity<Void> deleteLanguage(@PathVariable int resumeId, @PathVariable int languageId) {
-        try {
-            resumeService.deleteLanguage(resumeId, languageId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PutMapping("/{resumeId}/languages")
-    public ResponseEntity<LanguageDTO> updateLanguage(@PathVariable int resumeId, @RequestBody LanguageDTO languageDTO) {
-        try {
-            LanguageDTO updatedLanguage = resumeService.saveOrUpdateLanguage(resumeId, languageDTO);
-            return ResponseEntity.ok(updatedLanguage);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PostMapping("/{resumeId}/awards")
-    public ResponseEntity<AwardDTO> saveOrUpdateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
-        try {
-            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
-            return ResponseEntity.ok(updatedAward);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{resumeId}/awards/{awardId}")
-    public ResponseEntity<Void> deleteAward(@PathVariable int resumeId, @PathVariable int awardId) {
-        try {
-            resumeService.deleteAward(resumeId, awardId);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @PutMapping("/{resumeId}/awards")
-    public ResponseEntity<AwardDTO> updateAward(@PathVariable int resumeId, @RequestBody AwardDTO awardDTO) {
-        try {
-            AwardDTO updatedAward = resumeService.saveOrUpdateAward(resumeId, awardDTO);
-            return ResponseEntity.ok(updatedAward);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }
